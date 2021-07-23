@@ -170,4 +170,150 @@
   </form>
 </div>
 
+<main>
+
+
+<!-- The View Profile Modal -->
+<div id="Modal_ID_view" class="modal_sel_id_view">
+  <!-- Modal content -->
+  <div class="modal-content_view">
+    <div class="modal_sel_id_header_view">
+      <h3>Employee Profiles</h3>
+      <span class="modal_close_view">&times;</span>
+  </div>
+    <div class="modal_view">
+      <div class="modal-content" style="margin:0px;padding:20px 0px; height:480px;width:100%; border:none;">
+      <table id="search_result_table" class="view_emp_profile">
+        <tr>
+          <th>Full Name</th>
+          <th>Sex</th>
+          <th>Phone Number</th>
+          <th>Position / Title</th>
+          <th>Modify</th>
+        </tr>
+      <?php      // view employee profile modal
+      $sql = "SELECT emp_id,emp_fname,emp_mname,emp_lname,emp_gender,emp_tel1_num,emp_cur_position FROM employee ORDER BY emp_fname ASC, emp_mname ASC, emp_lname ASC;";
+
+      if($res=mysqli_query($conn, $sql)) echo "";
+      else echo "Unable to retrieve profile info: ".mysqli_error($conn);
+      while($row = mysqli_fetch_array($res))
+        echo '<tr>
+              <td>'.$row["emp_fname"].' '.$row["emp_mname"].' '.$row["emp_lname"].'</td>
+              <td>'.$row["emp_gender"].'</td>
+              <td>'.$row["emp_tel1_num"].'</td>
+              <td>'.$row["emp_cur_position"].'</td>
+              <td><div class="search_table_icons">
+                        <a href="#"><i class="fa fa-pencil ico_pencil" style="color:#0040d8;" onclick="openModal('.$row["emp_id"].',1);" title="Edit Profile"></i></a>
+                        <a href="#" id="linkT"><i class="fa fa-trash-o ico_trash" style="color:red;" onclick="openModal('.$row["emp_id"].',2);" title="Delete Profile"></i></a>
+                    </div></td>
+              </tr>';
+      /*echo '<div class="container search_profile">
+        <table id="search_result_table">
+            <tr>
+                <td rowspan="3" style="width: 100px; text-align: center;"><img src="" class="search_result_img" alt="Profile Picture"></td>
+                <td colspan="2" style="border-bottom: 1px solid #333;"><label>Name: </label><span>'.$row["emp_fname"].' '.$row["emp_mname"].' '.$row["emp_lname"].'</span></td>
+                <td rowspan="3" style="width: 130px; text-align: center; padding: 15px;">
+                    <div class="search_table_icons">
+                        <a href="#"><i class="fa fa-pencil ico_pencil" style="color:#0040d8;" onclick="openModal('.$row["emp_id"].',1);" title="Edit Profile"></i></a>
+                        <a href="" id="linkT"><i class="fa fa-trash-o ico_trash" style="color:red;" onclick="openModal('.$row["emp_id"].',2);" title="Delete Profile"></i></a>
+                    </div>
+                </td>
+            </tr>
+            <tr style="border-bottom: 1px solid #333;">
+                <td><label>Sex: </label><span>'.$row["emp_gender"].'</span></td>
+                <td><label>Phone N<emp style="text-decoration: underline;">o</emp>: </label><span>'.$row["emp_tel1_num"].'</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><label>Position/Title: </label><span>'.$row["emp_cur_position"].'</span></td>
+            </tr>
+        </table>
+         </div>';*/
+      ?>
+    </table>
+  </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- The New Modal -->
+<div id="Modal_ID_new" class="modal_sel_id_new">
+  <div class="modal-content_new">
+    <div class="modal_sel_id_header_new">
+      <h3>Register / Create New Employee's Profile</h3>
+      <span class="modal_close_new">&times;</span>
+    </div>
+   <iframe src="new_profile_employee.php" name="frm"></iframe>
+  </div>
+</div>
+
+
+
+<!-- The Edit Modal -->
+<div id="Modal_ID_edit" class="modal_sel_id_edit">
+  <div class="modal-content_edit">
+    <div class="modal_sel_id_header_edit">
+      <h3>Edit Employee's Profile</h3>
+      <span class="modal_close_edit">&times;</span>
+    </div>
+   <iframe src="edit_employee_profile.php" name="frm"></iframe>
+  </div>
+</div>
+
+
+
+
+<!-- The Delete Modal -->
+<div id="Modal_ID_delete" class="modal_sel_id_delete">
+  <!-- Modal content -->
+  <div class="modal-content_delete">
+    <div class="modal_sel_id_header_delete">
+      <span class="modal_close_delete">&times;</span>
+  </div>
+    <div class="modal_question_delete">
+      <h3>Are you sure you want to delete this profile?</h3>
+      <a href="#" id="delete_no">No</a>
+      <a href="#" id="delete_yes">Yes</a>
+    </div>
+    
+    <div class="modal_ans_delete">  
+      <?php        // deleting the employee profile
+        if(isset($_COOKIE['index_delete_modal'])){
+          $sql =  "DELETE FROM employee WHERE emp_id=".$_COOKIE['index_mod_id'];
+          if(mysqli_query($conn, $sql))
+            echo "Profile Deleted"; // making the cookie exprire
+          echo '<script>document.cookie = "index_delete_modal=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";   
+          window.location.reload();</script>';
+          //setcookie("index_delete_modal", "0");
+        }
+      ?>
+      <h3>Profile Deleted!</h3>
+      <a href="#" id="delete_ok">OK</a>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+</main>
+
+
+
+
+
+<footer style="padding: 5px;">
+    <div class="container" style="text-align: center; color: #222;">
+    	<span class="copyright">Copyright&nbsp;&copy; 2020  |  All Rights Reserved</span>
+    	<!--<ul class="list-inline quicklinks">
+            <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+            <li class="list-inline-item"><a href="#">Terms of Use</a></li>
+        </ul>-->
+    </div>
+</footer>
+
+
 </html>
