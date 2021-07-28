@@ -315,5 +315,246 @@
     </div>
 </footer>
 
+<script>
+
+  // Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    var modal_login = document.getElementById('login_admin');
+    if (event.target == modal_login) {
+        modal_login.style.display = "none";
+    }
+    var modal_change = document.getElementById('change_login_admin');
+    if (event.target == modal_change) {
+      modal_change.style.display = "none";
+    }
+}
+function lockAdmin(){
+  document.cookie = 'admin_lock=lock';
+  window.location.assign("index.php");
+}
+function unlockAdmin(){
+  <?php
+    if(isset($_POST['admin_submit'])){
+      for($j=1; $j<=2; $j++){// the second run is to check the master user and password
+      if($_POST['admin_login_user'] == $admin['admin_user'] && $_POST['admin_login_pass'] == $admin['admin_password']){
+          echo "
+          document.getElementById('admin_lock').style.visibility = 'hidden';
+          document.getElementById('admin_lock_icon').style.display = 'none';
+          document.getElementById('admin_unlock').style.visibility = 'visible';
+           document.getElementById('admin_unlock_icon').style.display = 'inline-block';
+
+           var d = new Date();
+           d.setTime(d.getTime() + (1 * 24 * 60 * 60 * 1000));
+           document.cookie = 'admin_lock=unlock;expires='+d.toUTCString()+';';
+
+           document.cookie = 'index_selected_modal=0';
+           window.location.assign('index.php');
+           ";
+           break;
+      }
+      else if($_POST['admin_login_user'] != $admin['admin_user'] && $_POST['admin_login_pass'] == $admin['admin_password']){
+        echo "
+          document.getElementById('user_err').innerHTML = 'Incorrect Username';
+           ";
+           break;
+      }
+      else if($_POST['admin_login_user'] == $admin['admin_user'] && $_POST['admin_login_pass'] != $admin['admin_password']){
+        echo "
+          document.getElementById('pass_err').innerHTML = 'Incorrect Password';
+           ";
+           break;
+      }
+      else{
+        echo "
+          document.getElementById('user_err').innerHTML = 'Incorrect Username';
+          document.getElementById('pass_err').innerHTML = 'Incorrect Password';
+           ";
+      }
+      //echo "window.location.assign('index.php');";
+
+      //set $admin to the master user and password
+      $sql = "SELECT admin_user, admin_password FROM admin WHERE admin_type='Master'";
+      if($admin = mysqli_fetch_array(mysqli_query($conn, $sql))) echo "";
+    }
+    }
+
+    if(isset($_COOKIE['admin_lock']) and $_COOKIE['admin_lock']=='unlock'){
+      echo "
+      document.getElementById('admin_lock').style.visibility = 'hidden';
+      document.getElementById('admin_lock_icon').style.display = 'none';
+      document.getElementById('admin_unlock').style.visibility = 'visible';
+      document.getElementById('admin_unlock_icon').style.display = 'inline-block';";
+    }
+    else{
+      echo "
+      document.getElementById('admin_lock').style.visibility = 'visible';
+      document.getElementById('admin_lock_icon').style.display = 'inline-block';
+      document.getElementById('admin_unlock').style.visibility = 'hidden';
+      document.getElementById('admin_unlock_icon').style.display = 'none';";
+    }
+  ?>
+  /*document.getElementById('admin_lock').style.visibility = 'hidden';
+  document.getElementById('admin_lock_icon').style.display = 'none';
+  document.getElementById('admin_unlock').style.visibility = 'visible';
+   document.getElementById('admin_unlock_icon').style.display = 'inline-block';*/
+}
+function peekPassword(i){
+  document.getElementById('login_pass'+i).type="text";
+}
+function unpeekPassword(i){
+  document.getElementById('login_pass'+i).type="password";
+}
+//*****************************************************
+
+function newEmployeeProfile(){
+  document.getElementById('Modal_ID_view').style.display="none";
+  document.getElementById('change_login_admin').style.display="none";
+  document.getElementById('Modal_ID_edit').style.display = "none";
+
+  var modal = document.getElementById('Modal_ID_new');
+  modal.style.display = "block";
+  var span = document.getElementsByClassName("modal_close_new")[0];
+  span.onclick = function() {
+    modal.style.display = "none";
+    window.location.reload();
+  }
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    window.location.reload();
+    }
+  }
+}
+
+function viewEmployeeProfiles(){
+  document.getElementById('Modal_ID_new').style.display="none";
+  document.getElementById('change_login_admin').style.display="none";
+  document.getElementById('Modal_ID_edit').style.display = "none";
+
+  var modal = document.getElementById('Modal_ID_view');
+  modal.style.display = "block";
+  var span = document.getElementsByClassName("modal_close_view")[0];
+  span.onclick = function() {
+    modal.style.display = "none";
+    window.location.reload();
+  }
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    window.location.reload();
+    }
+  }
+}
+
+function editEmployeeProfile(){
+  var modal = document.getElementById('Modal_ID_edit');
+  modal.style.display = "block";
+  var span = document.getElementsByClassName("modal_close_edit")[0];
+  span.onclick = function() {
+    modal.style.display = "none";
+    window.location.reload("index.php");
+  }
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    window.location.reload("index.php");
+    }
+  }
+}
+
+function deleteEmployeeProfile(){
+  var modal_del = document.getElementById('Modal_ID_delete');
+  modal_del.style.display = "block";
+  document.getElementsByClassName("modal_close_delete")[0].onclick = function() {
+    modal_del.style.display = "none";
+  }
+  window.onclick = function(event) {
+    if (event.target == modal_del) {
+      modal_del.style.display = "none";
+    }
+  }
+  document.getElementById('delete_no').onclick = function(){
+    modal_del.style.display = "none";
+  }
+  document.getElementById('delete_yes').onclick = function(event){ 
+    document.cookie = "index_delete_modal=delete";
+    window.onclick = function(event) {
+      if (event.target != document.getElementById('delete_yes')) {
+        modal_del.style.display = "none";
+        window.location.reload("index.php");
+      }
+    }
+    document.getElementsByClassName("modal_question_delete")[0].style.display = "none";
+    document.getElementsByClassName("modal_ans_delete")[0].style.display = "block";
+    document.getElementsByClassName("modal-content_delete")[0].style.width = '45%';
+  }
+  document.getElementById('delete_ok').onclick = function(){
+    //window.location.reload("index.php");
+    document.getElementsByClassName("modal-content_delete")[0].style.width = '55%';
+    document.getElementsByClassName("modal_question_delete")[0].style.display = "block";
+    document.getElementsByClassName("modal_ans_delete")[0].style.display = "none";
+    modal_del.style.display = "none";
+  }
+}
+
+
+
+function loadIndex(){
+   unlockAdmin();
+  //window.scrollBy(0, 140);
+  var select_modal = "<?php if(isset($_COOKIE['index_selected_modal']))echo $_COOKIE['index_selected_modal'];?>";
+  if(select_modal == '1'){
+    editEmployeeProfile();
+    document.cookie = "index_selected_modal="+0;
+  }
+  if(select_modal == '2'){
+    viewEmployeeProfiles();
+    deleteEmployeeProfile();
+    document.cookie = "index_selected_modal="+0;
+  }
+  if(select_modal == '3'){
+    document.cookie = "index_selected_modal="+0;
+    document.getElementsByClassName('animate')[0].style.animation='none';
+    document.getElementById('login_admin').style.display='block';
+  }
+}
+
+function openModal(cur_emp_id, select_modal){
+  //SET COOKIE to the selected icon(modal)
+  document.cookie = "index_selected_modal="+select_modal;
+  //Set COOKIE to the selected profile's res_id--------------
+  document.cookie = "index_mod_id="+cur_emp_id;
+  //var x = document.cookie;
+  //document.getElementById('demo').innerHTML="ALL COOKIES:"+x;
+  window.location.reload();
+  //--------------------------------------------------------
+}
+
+</script>
+
 
 </html>
